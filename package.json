@@ -1,9 +1,9 @@
 {
   "name": "hello-websockets",
   "scripts": {
-    "web": "http-server",
-    "ws": "node chat-ws.js",
-    "io": "node chat-io.js"
+    "web": "http-server src/websockets/",
+    "ws": "node src/websockets/chat-ws.js",
+    "io": "node src/sockerts.io/chat-io.js"
   },
   "dependencies": {
     "express": "^4.18.1",
