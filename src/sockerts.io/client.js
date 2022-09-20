@@ -84,7 +84,10 @@ $(function () {
   });
 
   socket.on('stream', (stream) => {
-    // console.log(stream);
-    document.getElementById('videoout').src = stream;
+    const [id, s] = stream.split(':::');
+    const $out = $('#videoout-' + id);
+    if ($out.length > 0) {
+      $out.attr('src', s);
+    }
   });
 });

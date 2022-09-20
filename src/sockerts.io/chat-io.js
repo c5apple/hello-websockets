@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on("stream", (stream) => {
-    io.emit("stream", socket.id + ':' + stream);
+    io.emit("stream", socket.id + ':::' + stream);
   });
 });
 
