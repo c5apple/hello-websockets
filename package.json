@@ -1,0 +1,11 @@
+{
+  "name": "hello-websockets",
+  "scripts": {
+    "web": "http-server",
+    "ws": "node chat-ws.js"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "ws": "^8.8.1"
+  }
+}
