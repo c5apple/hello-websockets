@@ -8,7 +8,22 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("Connected.");
+
+  console.log('client id - ' + socket.id);
+
+  console.log('コネクション数', socket.client.conn.server.clientsCount);
+  io.sockets.emit('count', socket.client.conn.server.clientsCount);
+
+  socket.on('disconnect', function (data) {
+    console.log('コネクション数', socket.client.conn.server.clientsCount);
+    io.sockets.emit('count', socket.client.conn.server.clientsCount);
+  });
+
   socket.on("post_message", (msg) => {
+
+    console.log('client id - ' + socket.id);
+    console.log(msg);
+
     io.emit("recv_message", msg);
   });
 });

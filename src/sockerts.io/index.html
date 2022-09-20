@@ -3,19 +3,23 @@
 
 <head>
   <title>Socket.IO chat</title>
-  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
-    integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
-    crossorigin="anonymous"></script>
 </head>
 
 <body>
   <pre id="out"></pre>
   <input type="text" id="msg">
   <input type="button" id="btn" value="OK">
+
+  <div>同時接続数:<span id="cnt"></span></div>
+
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+    integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+    crossorigin="anonymous"></script>
   <script>
     var out = document.getElementById("out");
     var msg = document.getElementById("msg");
     var btn = document.getElementById("btn");
+    var cnt = document.getElementById("cnt");
     var socket = io();
     btn.addEventListener("click", (e) => {
       socket.emit("post_message", msg.value);
@@ -24,6 +28,9 @@
       out.innerText += message + "\n";
       msg.value = "";
       msg.focus();
+    });
+    socket.on('count', count => {
+      cnt.innerText = count;
     });
   </script>
 </body>
