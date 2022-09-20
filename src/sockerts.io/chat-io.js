@@ -26,6 +26,12 @@ io.on("connection", (socket) => {
 
     io.emit("recv_message", msg);
   });
+
+  socket.on("stream", (stream) => {
+
+    // console.log(stream);
+    io.emit("stream", stream);
+  });
 });
 
 http.listen(5000, () => {
