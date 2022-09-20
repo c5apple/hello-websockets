@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
   const video = document.getElementById("video")
   document.getElementById('rec').addEventListener('click', () => {
     // navigator.mediaDevices.getUserMedia('video', startCapture_, error_);
@@ -66,6 +66,21 @@ $(function() {
   });
   socket.on('count', count => {
     cnt.innerText = count;
+  });
+
+  const ids = new Set();
+
+  socket.on('welcome', id => {
+    if (socket.id !== id && !ids.has(id)) {
+      const $tmp = $($('#video_tmp').html());
+      $tmp.find('img').attr('id', 'videoout-' + id);
+      $('#videos').append($tmp);
+    }
+    ids.add(id);
+  });
+  socket.on('byebye', id => {
+    ids.delete(id);
+    $('#videoout-' + id).closest('div').remove(); // s6
   });
 
   socket.on('stream', (stream) => {

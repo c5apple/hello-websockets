@@ -4,20 +4,24 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
 app.use(express.static(__dirname))
-// app.get("/", (req, res) => {
-//   res.sendFile(__dirname + "/index.html");
-// });
 
-io.on("connection", (socket) => {
+const ids = new Set();
+
+io.on('connection', (socket) => {
   console.log("Connected.");
-
   console.log('client id - ' + socket.id);
-
   console.log('コネクション数', socket.client.conn.server.clientsCount);
+
   io.sockets.emit('count', socket.client.conn.server.clientsCount);
 
+  ids.add(socket.id);
+  ids.forEach(id => {
+    io.sockets.emit('welcome', id);
+  });
+
   socket.on('disconnect', function (data) {
-    console.log('コネクション数', socket.client.conn.server.clientsCount);
+    ids.delete(socket.id);
+    io.sockets.emit('byebye', socket.id);
     io.sockets.emit('count', socket.client.conn.server.clientsCount);
   });
 
@@ -30,9 +34,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("stream", (stream) => {
-
-    // console.log(stream);
-    io.emit("stream", stream);
+    io.emit("stream", socket.id + ':' + stream);
   });
 });
 

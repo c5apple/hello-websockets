@@ -24,19 +24,21 @@
 
         <button id="rec">REC</button>
 
-        <div class="grid no-space">
+        <div id="videos" class="grid no-space">
           <div class="s6">
             <article class="no-padding">
               <video id="video" class="responsive medium"></video>
             </article>
           </div>
-          <div class="s6">
-            <article class="no-padding">
-              <img id="videoout" class="responsive medium">
-            </article>
-          </div>
-        </div>
 
+          <template id="video_tmp">
+            <div class="s6">
+              <article class="no-padding">
+                <img id="videoout" class="responsive medium">
+              </article>
+            </div>
+          </template>
+        </div>
 
         <canvas id="canvas" class="round extra" width="480" height="480" style="display:none"></canvas>
       </div>
