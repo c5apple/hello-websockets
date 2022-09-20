@@ -1,4 +1,12 @@
-<html>
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <title>Socket.IO chat</title>
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+    integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+    crossorigin="anonymous"></script>
+</head>
 
 <body>
   <pre id="out"></pre>
@@ -8,25 +16,15 @@
     var out = document.getElementById("out");
     var msg = document.getElementById("msg");
     var btn = document.getElementById("btn");
-    var sock = new WebSocket("ws://127.0.0.1:5000/");
-    sock.addEventListener("open", (e) => {
-      console.log("Connected.");
+    var socket = io();
+    btn.addEventListener("click", (e) => {
+      socket.emit("post_message", msg.value);
     });
-    sock.addEventListener("close", (e) => {
-      console.log("Closed.");
-    });
-    sock.addEventListener("error", (e) => {
-      console.log("Error.");
-    });
-    sock.addEventListener("message", (e) => {
-      out.innerText += e.data + "\n";
+    socket.on("recv_message", (message) => {
+      out.innerText += message + "\n";
       msg.value = "";
       msg.focus();
     });
-    btn.addEventListener("click", (e) => {
-      sock.send(msg.value);
-    });
-    msg.focus();
   </script>
 </body>
 
