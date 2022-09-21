@@ -1,14 +1,14 @@
 const express = require('express')
 const app = express()
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 app.use(express.static(__dirname))
 
 const ids = new Set();
 
 io.on('connection', (socket) => {
-  console.log("Connected.");
+  console.log('Connected.');
   console.log('client id - ' + socket.id);
   console.log('コネクション数', socket.client.conn.server.clientsCount);
 
@@ -25,17 +25,17 @@ io.on('connection', (socket) => {
     io.sockets.emit('count', socket.client.conn.server.clientsCount);
   });
 
-  socket.on("post_message", (msg) => {
-    io.emit("recv_message", socket.id + ':::' + sanitize(msg));
+  socket.on('post_message', (msg) => {
+    io.emit('recv_message', socket.id + ':::' + sanitize(msg));
   });
 
-  socket.on("stream", (stream) => {
-    io.emit("stream", socket.id + ':::' + stream);
+  socket.on('stream', (stream) => {
+    io.emit('stream', socket.id + ':::' + stream);
   });
 });
 
 http.listen(5000, () => {
-  console.log("Listen start.");
+  console.log('Listen start.');
 });
 
 function sanitize(str) {

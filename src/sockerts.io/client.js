@@ -1,5 +1,5 @@
 $(function () {
-  const video = document.getElementById("video");
+  const video = document.getElementById('video');
   let mystream;
   $('#rec').on('click', function () {
 
@@ -26,10 +26,6 @@ $(function () {
   });
 
   function startCapture_(stream) {
-    // video要素に対して、カメラからのストリームを設定
-    // video.src = stream;
-
-    // 30fpsでJPEG画像を取得
     timer = setInterval(function () {
       try {
         // キャンバスノードの生成
@@ -45,16 +41,16 @@ $(function () {
         // DataURLを取得し、イベントを発行する
         var data = cvs.toDataURL('image/jpeg');
         // console.log(data);
-        $(window).trigger("imageupdate", data);
+        $(window).trigger('imageupdate', data);
       } catch (e) {
         // エラー時
         error_(e);
       }
     }, 33);
   }
-  $(window).bind("imageupdate", function (e, data) {
+  $(window).bind('imageupdate', function (e, data) {
     // カメラ画像をWebSocketで送信する
-    socket.emit("stream", data);
+    socket.emit('stream', data);
   });
   function error_(e) {
     console.error(e);
@@ -62,11 +58,11 @@ $(function () {
 
   const socket = io();
   $('#frm_msg').on('submit', function () {
-    socket.emit("post_message", $('#msg').val());
+    socket.emit('post_message', $('#msg').val());
     $('#msg').val('');
     return false;
   });
-  socket.on("recv_message", (message) => {
+  socket.on('recv_message', (message) => {
     const [id, msg] = message.split(':::');
     const $span1 = $('<span>', {
       style: 'background-color:' + changeColor(id),
@@ -98,14 +94,14 @@ $(function () {
     ids.add(id);
 
     $('#toast_welcome').find('.name').html(id);
-    ui("#toast_welcome");
+    ui('#toast_welcome');
   });
   socket.on('byebye', id => {
     ids.delete(id);
     $('#videoout-' + id).closest('div').remove(); // s6
 
     $('#toast_byebye').find('.name').html(id);
-    ui("#toast_byebye");
+    ui('#toast_byebye');
   });
 
   socket.on('stream', (stream) => {
