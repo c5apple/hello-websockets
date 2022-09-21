@@ -68,8 +68,6 @@ $(function () {
     const $span2 = $('<span>', {
       html: msg,
     });
-    console.log($span1.prop('outerHTML'));
-    console.log($span2.prop('outerHTML'));
     $('#out').append($('<div>', {
       class: 'row',
       html: $span1.prop('outerHTML') + $span2.prop('outerHTML'),
@@ -91,10 +89,16 @@ $(function () {
       $('#videos').find('.name').eq(0).html(id);;
     }
     ids.add(id);
+
+    $('#toast_welcome').find('.name').html(id);
+    ui("#toast_welcome");
   });
   socket.on('byebye', id => {
     ids.delete(id);
     $('#videoout-' + id).closest('div').remove(); // s6
+
+    $('#toast_byebye').find('.name').html(id);
+    ui("#toast_byebye");
   });
 
   socket.on('stream', (stream) => {
