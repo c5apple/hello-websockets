@@ -7,48 +7,78 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>idöbätä</title>
   <link href="https://cdn.jsdelivr.net/npm/beercss@2.2.11/dist/cdn/beer.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/beercss@2.2.11/dist/cdn/beer.min.js" type="text/javascript"></script>
 </head>
 
 <body>
+  <header class="primary-container">
+    <nav>
+      <h1 class="h5 max">idöbätä</h1>
+      <a>
+        <span id="cnt" class="badge circle">0</span>
+        <i>account_circle</i>
+      </a>
+    </nav>
+  </header>
+
   <main class="responsive">
-    <header>
-      <nav>
-        <h5 class="max">idöbätä</h5>
+    <section>
+      <p>
+      </p>
+
+      <nav class="no-space">
+        <button class="border left-round max large" disabled>
+          <span>マイク</span>
+        </button>
+        <button id="rec" class="border right-round max large">
+          <span>カメラ</span>
+        </button>
       </nav>
-    </header>
 
-    <div class="grid no-space">
-      <div class="s6">
-        <div>同時接続数:<span id="cnt"></span></div>
+      <div id="videos" class="grid">
+        <div class="s12 m4 l3">
+          <article class="no-padding">
+            <video id="video" class="responsive medium"></video>
+            <div class="absolute bottom left right padding bottom-shadow white-text">
+              <nav>
+                <h5 class="name"></h5>
+              </nav>
+            </div>
+          </article>
+        </div>
 
-        <button id="rec">REC</button>
-
-        <div id="videos" class="grid no-space">
-          <div class="s6">
+        <template id="video_tmp">
+          <div class="s12 m4 l3">
             <article class="no-padding">
-              <video id="video" class="responsive medium"></video>
+              <img id="videoout" class="responsive medium">
+              <div class="absolute bottom left right padding bottom-shadow white-text">
+                <nav>
+                  <h5 class="name"></h5>
+                </nav>
+              </div>
             </article>
           </div>
-
-          <template id="video_tmp">
-            <div class="s6">
-              <article class="no-padding">
-                <img id="videoout" class="responsive medium">
-              </article>
-            </div>
-          </template>
-        </div>
+        </template>
 
         <canvas id="canvas" class="round extra" width="480" height="480" style="display:none"></canvas>
       </div>
-      <div class="s6">
-        <pre id="out"></pre>
-        <div class="field border">
-          <input id="msg" type="text">
+    </section>
+
+    <div class="large-space"></div>
+
+    <section>
+      <form id="frm_msg">
+        <div class="field label border">
+          <input id="msg" type="text" autocomplete="off">
+          <label>チャット</label>
         </div>
-        <button id="btn">OK</button>
-      </div>
+      </form>
+
+      <div class="small-space"></div>
+
+      <div id="out"></div>
+    </section>
   </main>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

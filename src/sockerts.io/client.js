@@ -1,6 +1,7 @@
 $(function () {
   const video = document.getElementById("video")
-  document.getElementById('rec').addEventListener('click', () => {
+  $('#rec').on('click', function () {
+    $(this).addClass('fill');
     // navigator.mediaDevices.getUserMedia('video', startCapture_, error_);
 
     navigator.mediaDevices.getUserMedia({
@@ -51,21 +52,31 @@ $(function () {
   function error_(e) {
     console.error(e);
   }
-  var out = document.getElementById("out");
-  var msg = document.getElementById("msg");
-  var btn = document.getElementById("btn");
-  var cnt = document.getElementById("cnt");
-  var socket = io();
-  btn.addEventListener("click", (e) => {
-    socket.emit("post_message", msg.value);
+
+  const socket = io();
+  $('#frm_msg').on('submit', function () {
+    socket.emit("post_message", $('#msg').val());
+    $('#msg').val('');
+    return false;
   });
   socket.on("recv_message", (message) => {
-    out.innerText += message + "\n";
-    msg.value = "";
-    msg.focus();
+    const [id, msg] = message.split(':::');
+    const $span1 = $('<span>', {
+      style: 'background-color:' + changeColor(id),
+      html: id,
+    });
+    const $span2 = $('<span>', {
+      html: msg,
+    });
+    console.log($span1.prop('outerHTML'));
+    console.log($span2.prop('outerHTML'));
+    $('#out').append($('<div>', {
+      class: 'row',
+      html: $span1.prop('outerHTML') + $span2.prop('outerHTML'),
+    }));
   });
   socket.on('count', count => {
-    cnt.innerText = count;
+    $('#cnt').html(count);
   });
 
   const ids = new Set();
@@ -74,7 +85,10 @@ $(function () {
     if (socket.id !== id && !ids.has(id)) {
       const $tmp = $($('#video_tmp').html());
       $tmp.find('img').attr('id', 'videoout-' + id);
+      $tmp.find('.name').html(id);
       $('#videos').append($tmp);
+    } else {
+      $('#videos').find('.name').eq(0).html(id);;
     }
     ids.add(id);
   });
@@ -90,4 +104,10 @@ $(function () {
       $out.attr('src', s);
     }
   });
+
+  function changeColor(str) {
+    const n = Array.from(str).map(ch => ch.charCodeAt(0)).reduce((a, b) => a + b);
+    const colorAngle = (n * n) % 360;
+    return `hsl(${colorAngle}, 80%, 64%)`;
+  }
 });

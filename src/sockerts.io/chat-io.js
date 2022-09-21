@@ -26,11 +26,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on("post_message", (msg) => {
-
-    console.log('client id - ' + socket.id);
-    console.log(msg);
-
-    io.emit("recv_message", msg);
+    io.emit("recv_message", socket.id + ':::' + sanitize(msg));
   });
 
   socket.on("stream", (stream) => {
@@ -41,3 +37,10 @@ io.on('connection', (socket) => {
 http.listen(5000, () => {
   console.log("Listen start.");
 });
+
+function sanitize(str) {
+  return String(str).replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
