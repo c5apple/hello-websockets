@@ -1,5 +1,5 @@
 $(function () {
-  const video = document.getElementById('video');
+  const $video = $('#video');
   let mystream;
   $('#rec').on('click', function () {
 
@@ -7,20 +7,17 @@ $(function () {
     $(this).toggleClass('fill', !isActive);
 
     if (isActive) {
-      console.log(mystream.getTracks()[0].stop());
+      mystream.getTracks()[0].stop();
     } else {
       navigator.mediaDevices.getUserMedia({
         video: true,
         audio: false,
       }).then((stream) => {
-        video.srcObject = stream;
-        video.play();
+        $video[0].srcObject = mystream = stream;
+        $video[0].play();
         startCapture_(stream);
-        mystream = stream;
-
-        // console.log(stream);
       }).catch(e => {
-        console.log(e)
+        console.error(e);
       });
     }
   });
@@ -38,32 +35,17 @@ $(function () {
         return startCapture_(stream);
       }
       try {
-        // キャンバスノードの生成
-        // var cvs = document.createElement('canvas');
-        var cvs = document.getElementById('canvas');
-        // cvs.width = video.width;
-        // cvs.height = video.height;
-        var ctx = cvs.getContext('2d');
+        const cvs = document.createElement('canvas');
+        cvs.width = 480;
+        cvs.height = 480;
+        const ctx = cvs.getContext('2d');
+        ctx.drawImage($video[0], 0, 0, 480, 480, 0, 0, 480, 480);
 
-        // キャンバスに描画
-        ctx.drawImage(video, 0, 0, 480, 480, 0, 0, cvs.width, cvs.height);
-
-        // DataURLを取得し、イベントを発行する
-        var data = cvs.toDataURL('image/jpeg');
-        // console.log(data);
-        $(window).trigger('imageupdate', data);
+        socket.emit('stream', cvs.toDataURL('image/jpeg'));
       } catch (e) {
-        // エラー時
-        error_(e);
+        console.error(e);
       }
     }, 1000 / fps);
-  }
-  $(window).bind('imageupdate', function (e, data) {
-    // カメラ画像をWebSocketで送信する
-    socket.emit('stream', data);
-  });
-  function error_(e) {
-    console.error(e);
   }
 
   const socket = io();
@@ -76,7 +58,7 @@ $(function () {
     const [id, msg] = message.split(':::');
     const $span1 = $('<span>', {
       style: 'background-color:' + changeColor(id),
-      html: id,
+      html: id.substring(0, 10),
     });
     const $span2 = $('<span>', {
       html: msg,
@@ -93,24 +75,30 @@ $(function () {
   const ids = new Set();
 
   socket.on('welcome', id => {
+    const $span = $('<span>', {
+      class: 'truncate',
+      style: 'color:' + changeColor(id),
+      html: id.substring(0, 10),
+    });
     if (socket.id !== id && !ids.has(id)) {
       const $tmp = $($('#video_tmp').html());
       $tmp.find('img').attr('id', 'videoout-' + id);
-      $tmp.find('.name').html($(`<span class="truncate">${id}</span>`));
+      $tmp.find('.name').html($span.prop('outerHTML'));
+
       $('#videos').append($tmp);
     } else {
-      $('#videos').find('.name').eq(0).html($(`<span class="truncate">${id}</span>`));
+      $('#videos').find('.name').eq(0).html($span.prop('outerHTML'));
     }
     ids.add(id);
 
-    $('#toast_welcome').find('.name').html(id);
+    $('#toast_welcome').find('.name').html(id.substring(0, 10),);
     ui('#toast_welcome');
   });
   socket.on('byebye', id => {
     ids.delete(id);
     $('#videoout-' + id).closest('div').remove(); // s6
 
-    $('#toast_byebye').find('.name').html(id);
+    $('#toast_byebye').find('.name').html(id.substring(0, 10),);
     ui('#toast_byebye');
   });
 
