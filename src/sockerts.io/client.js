@@ -1,21 +1,28 @@
 $(function () {
-  const video = document.getElementById("video")
+  const video = document.getElementById("video");
+  let mystream;
   $('#rec').on('click', function () {
-    $(this).addClass('fill');
-    // navigator.mediaDevices.getUserMedia('video', startCapture_, error_);
 
-    navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false,
-    }).then((stream) => {
-      // console.log(stream);
-      video.srcObject = stream;
-      video.play();
-      startCapture_(stream);
+    const isActive = $(this).hasClass('fill');
+    $(this).toggleClass('fill', !isActive);
 
-    }).catch(e => {
-      console.log(e)
-    });
+    if (isActive) {
+      console.log(mystream.getTracks()[0].stop());
+    } else {
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false,
+      }).then((stream) => {
+        video.srcObject = stream;
+        video.play();
+        startCapture_(stream);
+        mystream = stream;
+
+        // console.log(stream);
+      }).catch(e => {
+        console.log(e)
+      });
+    }
   });
 
   function startCapture_(stream) {
@@ -83,10 +90,10 @@ $(function () {
     if (socket.id !== id && !ids.has(id)) {
       const $tmp = $($('#video_tmp').html());
       $tmp.find('img').attr('id', 'videoout-' + id);
-      $tmp.find('.name').html(id);
+      $tmp.find('.name').html($(`<span class="truncate">${id}</span>`));
       $('#videos').append($tmp);
     } else {
-      $('#videos').find('.name').eq(0).html(id);;
+      $('#videos').find('.name').eq(0).html($(`<span class="truncate">${id}</span>`));
     }
     ids.add(id);
 

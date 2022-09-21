@@ -1,3 +1,11 @@
 .h5 {
   font-size: 24rem;
 }
+
+#videos article {
+  background-color: var(--on-background);
+}
+
+#videos h5 {
+  width: 100%;
+}
