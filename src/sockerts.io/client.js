@@ -25,8 +25,18 @@ $(function () {
     }
   });
 
+  $('#fps').on('input', function () {
+    $('#label_fps').html($(this).val() + 'fps');
+  });
+
+  let timer;
   function startCapture_(stream) {
+    let fps = Number($('#fps').val());
     timer = setInterval(function () {
+      if (Number($('#fps').val()) !== fps) {
+        clearInterval(timer);
+        return startCapture_(stream);
+      }
       try {
         // キャンバスノードの生成
         // var cvs = document.createElement('canvas');
@@ -46,7 +56,7 @@ $(function () {
         // エラー時
         error_(e);
       }
-    }, 33);
+    }, 1000 / fps);
   }
   $(window).bind('imageupdate', function (e, data) {
     // カメラ画像をWebSocketで送信する
